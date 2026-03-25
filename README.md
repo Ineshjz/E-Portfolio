@@ -18,4 +18,4 @@ An e-portfolio is a great way of showing abilities and skills by presenting conc
 
 ## When (= time estimation)
 - Starting date is on the 25th of March 2026
-- No due date
+- Due date : 5th June
