@@ -1,51 +1,761 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Eportfolio</title>
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ePortfolio Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<style>
-    /* Conteneur pour aligner le mot et la zone de texte */
-    .ligne {
-        display: flex;
-        /* Aligne horizontalement */
-        align-items: center;
-        /* Centre verticalement */
-        gap: 20px;
-        /* Espace entre le mot et la zone */
+    :root {
+      --ink: #1a1a1a;
+      --ink-muted: #6b6b6b;
+      --ink-faint: #a8a8a8;
+      --surface: #fafaf8;
+      --surface-card: #ffffff;
+      --border: #e4e2dd;
+      --border-focus: #1a1a1a;
+      --accent: #c8a96e;
+      --accent-soft: #f5edd8;
+      --danger: #c0392b;
+      --radius: 6px;
+      --radius-lg: 12px;
     }
 
-    .ligne_email {
-        display: flex;
-        /* Aligne horizontalement */
-        align-items: center;
-        /* Centre verticalement */
-        gap: 60px;
-        /* Espace entre le mot et la zone */
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 0;
     }
-</style>
-</head>
 
-<Body>
-    <header>
-        <h1>Welcome to your ePortfolio generator</h1>
-    </header>
-    <h2>Personnal info</h2>
-    <div class="ligne"><label for="firstname">Firstname :</label><textarea id="firstname" name="firstname" rows="1"
-            cols="50"></textarea></div>
-    <div class="ligne"><label for="lastname">Lastname :</label><textarea id="lastname" name="lastname" rows="1"
-            cols="50"></textarea></div>
-    <div class="ligne_email"><label for="email">Email:</label><textarea id="email" name="email" rows="1"
-            cols="50"></textarea>
+    /* ── Header ── */
+    .site-header {
+      background: var(--ink);
+      color: #fff;
+      padding: 2rem 3rem;
+      display: flex;
+      align-items: flex-end;
+      gap: 1.5rem;
+    }
+
+    .site-header .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.2rem;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .site-header .logo span {
+      color: var(--accent);
+    }
+
+    .site-header .tagline {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding-bottom: 0.35rem;
+    }
+
+    /* ── Progress Steps ── */
+    .steps-bar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 3rem;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+    }
+
+    .step-tab {
+      padding: 1rem 1.5rem 0.85rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      border-bottom: 2.5px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .step-tab.active {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+    }
+
+    .step-tab.done {
+      color: var(--accent);
+    }
+
+    .step-num {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid currentColor;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      flex-shrink: 0;
+    }
+
+    .step-tab.done .step-num {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* ── Layout ── */
+    .main-layout {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* ── Section Panels ── */
+    .panel {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+      animation: fadeUp 0.3s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel-header {
+      padding: 1.75rem 2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .panel-subtitle {
+      font-size: 0.85rem;
+      color: var(--ink-muted);
+      margin-top: 0.3rem;
+    }
+
+    .panel-body {
+      padding: 2rem;
+    }
+
+    /* ── Form Grid ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem 1.5rem;
+    }
+
+    .form-grid .full {
+      grid-column: 1 / -1;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    textarea,
+    select {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--ink);
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.65rem 0.9rem;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.15s;
+      resize: vertical;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--border-focus);
+      background: #fff;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: var(--ink-faint);
+    }
+
+    /* ── Skills Tags ── */
+    .tags-input-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      padding: 0.5rem 0.7rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      min-height: 46px;
+      align-items: center;
+      cursor: text;
+    }
+
+    .tags-input-wrap:focus-within {
+      border-color: var(--border-focus);
+      background: #fff;
+    }
+
+    .tag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: var(--accent-soft);
+      color: #7a5c1e;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+    }
+
+    .tag-chip button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: inherit;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0;
+      opacity: 0.6;
+    }
+
+    .tag-chip button:hover { opacity: 1; }
+
+    .tags-real-input {
+      border: none !important;
+      padding: 0.1rem 0.2rem !important;
+      background: transparent !important;
+      font-size: 0.9rem !important;
+      flex: 1;
+      min-width: 100px;
+      outline: none;
+    }
+
+    /* ── Project Card ── */
+    .project-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+
+    .project-card-header {
+      background: #f7f6f2;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .project-card-title {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-remove {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--ink-faint);
+      font-size: 1.2rem;
+      line-height: 1;
+      padding: 0 0.2rem;
+    }
+
+    .btn-remove:hover { color: var(--danger); }
+
+    .project-card-body {
+      padding: 1.5rem;
+    }
+
+    /* ── Add Button ── */
+    .btn-add {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.2rem;
+      background: none;
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius);
+      color: var(--ink-muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-add:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+      background: #f7f6f2;
+    }
+
+    /* ── Navigation Buttons ── */
+    .form-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 0.7rem 1.6rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      transition: all 0.15s;
+    }
+
+    .btn-secondary {
+      background: none;
+      border-color: var(--border);
+      color: var(--ink-muted);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #333;
+    }
+
+    .btn-submit {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      padding: 0.8rem 2rem;
+      font-size: 0.95rem;
+    }
+
+    .btn-submit:hover {
+      background: #b8963e;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--ink);
+      color: #fff;
+      padding: 0.9rem 1.4rem;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: all 0.25s;
+      z-index: 999;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── Summary ── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .summary-item {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+    }
+
+    .summary-item .si-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--ink-faint);
+      margin-bottom: 0.3rem;
+    }
+
+    .summary-item .si-value {
+      font-size: 0.95rem;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    @media (max-width: 640px) {
+      .site-header { padding: 1.5rem; }
+      .steps-bar { padding: 0 1rem; }
+      .main-layout { padding: 1.5rem 1rem; }
+      .panel-body { padding: 1.25rem; }
+      .form-grid { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">e<span>Portfolio</span></div>
+  <span class="tagline">CV Generator</span>
+</header>
+
+<nav class="steps-bar" id="stepsBar">
+  <div class="step-tab active" data-step="0"><span class="step-num">1</span> Personal</div>
+  <div class="step-tab" data-step="1"><span class="step-num">2</span> Profile</div>
+  <div class="step-tab" data-step="2"><span class="step-num">3</span> Projects</div>
+  <div class="step-tab" data-step="3"><span class="step-num">4</span> Review</div>
+</nav>
+
+<main class="main-layout">
+
+  <!-- Step 0 — Personal Info -->
+  <section class="panel active" id="step-0">
+    <div class="panel-header">
+      <h2 class="panel-title">Personal Information</h2>
+      <p class="panel-subtitle">How you'll appear at the top of your CV.</p>
     </div>
+    <div class="panel-body">
+      <div class="form-grid">
+        <div class="field">
+          <label for="firstname">First name</label>
+          <input type="text" id="firstname" name="firstname" placeholder="Marie" />
+        </div>
+        <div class="field">
+          <label for="lastname">Last name</label>
+          <input type="text" id="lastname" name="lastname" placeholder="Dupont" />
+        </div>
+        <div class="field full">
+          <label for="email">Email address</label>
+          <input type="email" id="email" name="email" placeholder="marie.dupont@example.com" />
+        </div>
+        <div class="field full">
+          <label for="links">Professional links <span style="font-weight:400;text-transform:none;font-size:0.8rem;color:var(--ink-faint)">(LinkedIn, GitHub, portfolio…)</span></label>
+          <input type="text" id="links" name="links" placeholder="https://linkedin.com/in/…" />
+        </div>
+      </div>
+    </div>
+    <div class="form-footer">
+      <span></span>
+      <button class="btn btn-primary" onclick="goStep(1)">Continue →</button>
+    </div>
+  </section>
 
-    <h2>Project Description</h2>
-</Body>
+  <!-- Step 1 — Profile -->
+  <section class="panel" id="step-1">
+    <div class="panel-header">
+      <h2 class="panel-title">Profile &amp; Skills</h2>
+      <p class="panel-subtitle">A summary of who you are and what you bring.</p>
+    </div>
+    <div class="panel-body">
+      <div class="form-grid">
+        <div class="field full">
+          <label for="fields">Fields / domains</label>
+          <input type="text" id="fields" name="fields" placeholder="Web development, UX design, Data science…" />
+        </div>
+        <div class="field full">
+          <label>Main skills <span style="font-weight:400;text-transform:none;font-size:0.8rem;color:var(--ink-faint)">— press Enter to add</span></label>
+          <div class="tags-input-wrap" id="skillsWrap" onclick="document.getElementById('skillInput').focus()">
+            <input class="tags-real-input" id="skillInput" placeholder="Python, React, Figma…" />
+          </div>
+          <input type="hidden" id="main_skills" name="main_skills" />
+        </div>
+        <div class="field full">
+          <label>Keywords <span style="font-weight:400;text-transform:none;font-size:0.8rem;color:var(--ink-faint)">— press Enter to add</span></label>
+          <div class="tags-input-wrap" id="kwWrap" onclick="document.getElementById('kwInput').focus()">
+            <input class="tags-real-input" id="kwInput" placeholder="AI, Open-source, Agile…" />
+          </div>
+          <input type="hidden" id="keywords" name="keywords" />
+        </div>
+        <div class="field full">
+          <label for="description">Personal statement</label>
+          <textarea id="description" name="description" rows="4" placeholder="A short paragraph about your goals, interests, and what makes you unique…"></textarea>
+        </div>
+        <div class="field full">
+          <label for="studies">Education</label>
+          <textarea id="studies" name="studies" rows="3" placeholder="MSc Computer Science — Université de Montpellier, 2023…"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-secondary" onclick="goStep(0)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(2)">Continue →</button>
+    </div>
+  </section>
 
+  <!-- Step 2 — Projects -->
+  <section class="panel" id="step-2">
+    <div class="panel-header">
+      <h2 class="panel-title">Projects</h2>
+      <p class="panel-subtitle">Describe the work you want to showcase.</p>
+    </div>
+    <div class="panel-body">
+      <div id="projectsList"></div>
+      <button class="btn-add" onclick="addProject()">+ Add a project</button>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(3)">Continue →</button>
+    </div>
+  </section>
 
+  <!-- Step 3 — Review -->
+  <section class="panel" id="step-3">
+    <div class="panel-header">
+      <h2 class="panel-title">Review &amp; Submit</h2>
+      <p class="panel-subtitle">Check your details before generating.</p>
+    </div>
+    <div class="panel-body" id="reviewBody">
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
+      <button class="btn btn-submit" onclick="submitPortfolio()">Generate ePortfolio ✦</button>
+    </div>
+  </section>
 
+</main>
 
+<div class="toast" id="toast"></div>
+
+<script>
+  let currentStep = 0;
+  const totalSteps = 4;
+
+  const skills = [];
+  const keywords = [];
+  let projectCount = 0;
+
+  /* ── Step navigation ── */
+  function goStep(n) {
+    document.getElementById(`step-${currentStep}`).classList.remove('active');
+    document.querySelectorAll('.step-tab').forEach((t, i) => {
+      t.classList.remove('active', 'done');
+      if (i < n) t.classList.add('done');
+    });
+    currentStep = n;
+    document.getElementById(`step-${n}`).classList.add('active');
+    document.querySelectorAll('.step-tab')[n].classList.add('active');
+    if (n === 3) buildReview();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ── Tags ── */
+  function makeTagSystem(inputId, wrapId, arr, hiddenId) {
+    const inp = document.getElementById(inputId);
+    inp.addEventListener('keydown', e => {
+      if ((e.key === 'Enter' || e.key === ',') && inp.value.trim()) {
+        e.preventDefault();
+        const val = inp.value.replace(',', '').trim();
+        if (val && !arr.includes(val)) {
+          arr.push(val);
+          renderTags(wrapId, inputId, arr, hiddenId);
+        }
+        inp.value = '';
+      }
+    });
+  }
+
+  function renderTags(wrapId, inputId, arr, hiddenId) {
+    const wrap = document.getElementById(wrapId);
+    const inp = document.getElementById(inputId);
+    wrap.innerHTML = '';
+    arr.forEach((tag, i) => {
+      const chip = document.createElement('span');
+      chip.className = 'tag-chip';
+      chip.innerHTML = `${tag}<button onclick="removeTag(${i},'${wrapId}','${inputId}',${JSON.stringify(arr)},'${hiddenId}')">×</button>`;
+      wrap.appendChild(chip);
+    });
+    wrap.appendChild(inp);
+    document.getElementById(hiddenId).value = arr.join(', ');
+  }
+
+  function removeTag(i, wrapId, inputId, arr, hiddenId) {
+    arr.splice(i, 1);
+    renderTags(wrapId, inputId, arr, hiddenId);
+  }
+
+  makeTagSystem('skillInput', 'skillsWrap', skills, 'main_skills');
+  makeTagSystem('kwInput', 'kwWrap', keywords, 'keywords');
+
+  /* ── Projects ── */
+  function addProject() {
+    projectCount++;
+    const id = projectCount;
+    const div = document.createElement('div');
+    div.className = 'project-card';
+    div.id = `proj-${id}`;
+    div.innerHTML = `
+      <div class="project-card-header">
+        <span class="project-card-title">Project ${id}</span>
+        <button class="btn-remove" onclick="removeProject(${id})" title="Remove">×</button>
+      </div>
+      <div class="project-card-body">
+        <div class="form-grid">
+          <div class="field full">
+            <label>Scope / Title</label>
+            <input type="text" name="proj_scope_${id}" placeholder="What is this project about?" />
+          </div>
+          <div class="field full">
+            <label>Why / Motivation</label>
+            <textarea name="proj_why_${id}" rows="2" placeholder="Why did you build this?"></textarea>
+          </div>
+          <div class="field">
+            <label>Context</label>
+            <input type="text" name="proj_context_${id}" placeholder="Hackathon, internship, personal…" />
+          </div>
+          <div class="field">
+            <label>Collaborators</label>
+            <input type="text" name="proj_collaborators_${id}" placeholder="Solo, team of 3…" />
+          </div>
+          <div class="field full">
+            <label>URL</label>
+            <input type="url" name="proj_url_${id}" placeholder="https://github.com/…" />
+          </div>
+          <div class="field full">
+            <label>Visuals (image/video URL)</label>
+            <input type="url" name="proj_image_${id}" placeholder="https://…" />
+          </div>
+        </div>
+      </div>
+    `;
+    document.getElementById('projectsList').appendChild(div);
+  }
+
+  function removeProject(id) {
+    document.getElementById(`proj-${id}`)?.remove();
+  }
+
+  /* ── Review ── */
+  function buildReview() {
+    const get = id => document.getElementById(id)?.value || '—';
+    const body = document.getElementById('reviewBody');
+    body.innerHTML = `
+      <h3 style="font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:1rem;color:var(--ink-muted)">Personal</h3>
+      <div class="summary-grid" style="margin-bottom:2rem">
+        <div class="summary-item"><div class="si-label">First name</div><div class="si-value">${get('firstname')}</div></div>
+        <div class="summary-item"><div class="si-label">Last name</div><div class="si-value">${get('lastname')}</div></div>
+        <div class="summary-item"><div class="si-label">Email</div><div class="si-value">${get('email')}</div></div>
+        <div class="summary-item"><div class="si-label">Links</div><div class="si-value">${get('links')}</div></div>
+      </div>
+      <h3 style="font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:1rem;color:var(--ink-muted)">Profile</h3>
+      <div class="summary-grid" style="margin-bottom:2rem">
+        <div class="summary-item"><div class="si-label">Fields</div><div class="si-value">${get('fields')}</div></div>
+        <div class="summary-item"><div class="si-label">Skills</div><div class="si-value">${get('main_skills') || '—'}</div></div>
+        <div class="summary-item full" style="grid-column:1/-1"><div class="si-label">Statement</div><div class="si-value">${get('description')}</div></div>
+        <div class="summary-item full" style="grid-column:1/-1"><div class="si-label">Education</div><div class="si-value">${get('studies')}</div></div>
+      </div>
+      <h3 style="font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:1rem;color:var(--ink-muted)">Projects — ${document.querySelectorAll('.project-card').length} added</h3>
+    `;
+  }
+
+  /* ── Submit ── */
+  async function submitPortfolio() {
+    const get = id => document.getElementById(id)?.value?.trim() || '';
+
+    const personal_info = {
+      firstname: get('firstname'),
+      lastname: get('lastname'),
+      email: get('email'),
+      fields: get('fields'),
+      keywords: get('keywords'),
+      description: get('description'),
+      main_skills: get('main_skills'),
+      studies: get('studies'),
+      links: get('links'),
+    };
+
+    const project_description = [];
+    const project_visual = [];
+
+    document.querySelectorAll('.project-card').forEach(card => {
+      const id = card.id.split('-')[1];
+      const qn = n => card.querySelector(`[name=proj_${n}_${id}]`)?.value?.trim() || '';
+      project_description.push({
+        scope: qn('scope'), why: qn('why'), context: qn('context'),
+        collaborators: qn('collaborators'), url: qn('url'),
+      });
+      project_visual.push({
+        image: qn('image'), video: '', url: qn('url'), comments: '',
+      });
+    });
+
+    const payload = { personal_info, project_description, project_visual };
+
+    try {
+      const res = await fetch('/eportfolio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error(`Server error ${res.status}`);
+      showToast('✓ ePortfolio submitted successfully!');
+    } catch (err) {
+      showToast('⚠ ' + err.message);
+    }
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  addProject();
+</script>
+</body>
 </html>
