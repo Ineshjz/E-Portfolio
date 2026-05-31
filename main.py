@@ -1,14 +1,15 @@
 from fastapi import Depends, FastAPI, Request
 from pydantic import BaseModel
-from fastapi.templating import Jinja2Templates
+
+# from fastapi.templating import Jinja2Templates
 from typing import Annotated
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
-templates = Jinja2Templates(directory="Templates")
+# templates = Jinja2Templates(directory="Templates")
 
 # nom du fichier de
-sqlite_file_name = "database.db"
+sqlite_file_name = "test_database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
 #
@@ -68,6 +69,7 @@ class ProjectDescription(SQLModel):
 
 class Project(ProjectDescription, table=True):
     project_id: int | None = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="personalinfo_session.user_id")
 
 
 class ProjectVisual(SQLModel, table=True):
@@ -79,11 +81,18 @@ class ProjectVisual(SQLModel, table=True):
     project_id: int = Field(foreign_key="project.project_id")
 
 
+class ProjectVisualInput(SQLModel):
+    image: str
+    video: str
+    url: str
+    comments: str | None = None
+
+
 #############################################################################
 class Eportfolio(BaseModel):
     personal_info: PersonalInfo_User
     project_description: list[ProjectDescription]
-    project_visual: list[ProjectVisual]
+    project_visual: list[ProjectVisualInput]
 
 
 # Mettre quelque part une response filtrer pour que l'utilisateur ne voit pas l'ID juste les infos qu'il doit entrer
@@ -91,14 +100,28 @@ class Eportfolio(BaseModel):
 
 # ici doit contenir la première page que le navigateur doit afficher
 @app.get("/")
-def home_page(request: Request):
-    return templates.TemplateResponse(request, "index.html")
+def home_page():
+    return FileResponse("Templates/index.html")
 
 
 # A modifier pour récupérer et envoyer les données à la DB
 @app.post("/eportfolio")
-def create_portfolio(eportfolio: Eportfolio):
-    return eportfolio
+def create_portfolio(eportfolio: Eportfolio, session: SessionDep):
+
+    user = PersonalInfo_Session(**eportfolio.personal_info.model_dump())
+
+    session.add(user)  # add in database
+    session.commit()
+    session.refresh(user)
+
+    for project_data in eportfolio.project_description:
+        project = Project(**project_data.model_dump(), user_id=user.user_id)
+
+        session.add(project)
+        session.commit()
+        session.refresh(project)
+
+    return {"message": "Portfolio créé avec succès", "user_id": user.user_id}
 
 
 # ???????????????????
@@ -117,3 +140,9 @@ def create_portfolio(eportfolio: Eportfolio):
 #     )
 
 #     return ""
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="127.0.0.1", port=8000)
