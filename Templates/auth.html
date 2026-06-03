@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Connexion</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fafaf8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .box {
+      background: white;
+      padding: 2rem;
+      width: 320px;
+      border-radius: 14px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      background: #1a1a1a;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    small {
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <form class="box" action="/register" method="post">
+    <h2>Créer un compte</h2>
+
+    <input 
+      type="email" 
+      name="email" 
+      placeholder="adresse@email.com"
+      required
+      pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+      title="Entre une adresse email valide"
+    >
+
+    <input 
+      type="password" 
+      name="password" 
+      placeholder="Mot de passe"
+      required
+    >
+
+    <small>Le compte créé aura automatiquement le rôle user.</small>
+    <br><br>
+
+    <button type="submit">Créer mon compte</button>
+  </form>
+
+  <form class="box" action="/login" method="post">
+    <h2>Connexion</h2>
+
+    <input 
+      type="email" 
+      name="email" 
+      placeholder="adresse@email.com"
+      required
+    >
+
+    <input 
+      type="password" 
+      name="password" 
+      placeholder="Mot de passe"
+      required
+    >
+
+    <button type="submit">Se connecter</button>
+  </form>
+
+</div>
+
+</body>
+</html>
