@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fafaf8;
+      padding: 2rem;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 14px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+      margin-bottom: 2rem;
+    }
+
+    input, select, button {
+      padding: 0.6rem;
+      margin: 0.3rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    th, td {
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .danger {
+      background: #c0392b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Interface Admin</h1>
+  <a href="/logout">Déconnexion</a>
+</header>
+
+<div class="card">
+  <h2>Créer un utilisateur</h2>
+
+  <form id="createUserForm">
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Mot de passe" required>
+
+    <select name="role">
+      <option value="user">user</option>
+      <option value="admin">admin</option>
+    </select>
+
+    <button type="submit">Créer</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Utilisateurs existants</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Rôle</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="usersTable"></tbody>
+  </table>
+</div>
+
+<script>
+async function loadUsers() {
+  const res = await fetch('/api/admin/users');
+  const users = await res.json();
+
+  const tbody = document.getElementById('usersTable');
+  tbody.innerHTML = '';
+
+  users.forEach(user => {
+    const tr = document.createElement('tr');
+
+    tr.innerHTML = `
+      <td>${user.id}</td>
+      <td>${user.email}</td>
+      <td>
+        <select onchange="changeRole(${user.id}, this.value)">
+          <option value="user" ${user.role === 'user' ? 'selected' : ''}>user</option>
+          <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>admin</option>
+        </select>
+      </td>
+      <td>
+        <button class="danger" onclick="deleteUser(${user.id})">Supprimer</button>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+}
+
+async function changeRole(userId, role) {
+  const formData = new FormData();
+  formData.append('role', role);
+
+  await fetch(`/api/admin/users/${userId}/role`, {
+    method: 'POST',
+    body: formData
+  });
+
+  loadUsers();
+}
+
+async function deleteUser(userId) {
+  if (!confirm('Supprimer cet utilisateur ?')) return;
+
+  await fetch(`/api/admin/users/${userId}`, {
+    method: 'DELETE'
+  });
+
+  loadUsers();
+}
+
+document.getElementById('createUserForm').addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const formData = new FormData(e.target);
+
+  await fetch('/api/admin/users', {
+    method: 'POST',
+    body: formData
+  });
+
+  e.target.reset();
+  loadUsers();
+});
+
+loadUsers();
+</script>
+
+</body>
+</html>
