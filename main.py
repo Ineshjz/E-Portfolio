@@ -278,21 +278,6 @@ def show_portfolio(user_id: int, request: Request, session: SessionDep):
         "skills": skills,
         "keywords": keywords,
     })
-# ???????????????????
-# @app.post("/eportfolio/create")
-# def create_portfolio(eportfolio: Eportfolio):
-#     if not admin:
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="Not admin action",
-#         )
-
-#     return templates.TemplateResponse(
-#         request,
-#         "index.html",
-#         context={"coffee": {}},
-#     )
-
 
 #     return ""
 @app.get("/api/admin/users")  # sur admin permets d'afficher tous les comptes
