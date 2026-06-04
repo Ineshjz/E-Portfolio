@@ -1,21 +1,81 @@
-# E-Portfolio
-In the module of Web Programming, we want to create an e-portfolio.
+# E-Portfolio Generator
 
-# Context
-The objective is to create of website that is used to generate e-portfolios.
+## Overview
 
-## Why (= the problem)
-People searching for a job, often need to show and value their work beyond Resumes that are very concise.
+E-Portfolio Generator is a web application that allows users to quickly create a professional digital portfolio from their personal and academic information.
 
-## What (= the solution)
-An e-portfolio is a great way of showing abilities and skills by presenting concrete projects in an accessible and dynamic environment.
+The platform provides:
 
-# Scope
-## How (= the magic behind the solution)
-- Using FastAPI for now, we will code the basic structure to manage the behaviour of the website receiving the users' elements (documents, URL, Images,...)
-- After, we will create an adapted database to organize all files.
-- In a second time, we will create a real profesional HTML page to make it easy to use and interact with users ergonomically.
+- User authentication (registration and login)
+- Role management (User / Admin)
+- Portfolio generation from a form
+- Portfolio visualization through a web interface
+- Data storage using SQLite
+- Administration features for managing users
 
-## When (= time estimation)
-- Starting date is on the 25th of March 2026
-- Due date : 5th June
+This project was developed using **FastAPI** for the backend and **HTML/CSS/JavaScript** for the frontend.
+
+---
+
+## Features
+
+### User Features
+- Create an account
+- Log in securely
+- Generate an e-portfolio
+- View generated portfolio information
+- Manage personal profile data
+
+### Admin Features
+- Access an administration dashboard
+- Manage registered users
+- Monitor platform activity
+
+---
+
+## Technologies Used
+
+### Backend
+- FastAPI
+- SQLModel
+- SQLite
+- Jinja2
+- Uvicorn
+
+### Frontend
+- HTML
+- CSS
+- JavaScript
+
+### Authentication
+- Password hashing with bcrypt
+- Session-based authentication
+
+---
+
+## Project Structure
+
+```text
+E-Portfolio/
+│
+├── main.py
+├── database.py
+├── models.py
+├── auth.py
+│
+├── static/
+│   ├── css/
+│   ├── js/
+│   └── images/
+│
+├── templates/
+│   ├── index.html
+│   ├── login.html
+│   ├── register.html
+│   ├── dashboard.html
+│   └── portfolio.html
+│
+├── test_database.db
+│
+├── requirements.txt
+└── README.md
