@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mes ePortfolios</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+
+<body>
+
+    <header>
+        <a href="/" class="brand">e<span>Portfolio</span></a>
+        <div class="header-right">
+            <div class="user-info">
+                <div class="avatar" id="headerAvatar">?</div>
+                <span class="user-email" id="headerEmail"></span>
+            </div>
+            <a href="/logout" class="btn-logout">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Déconnexion
+            </a>
+        </div>
+    </header>
+
+    <main>
+
+        <div class="page-top">
+            <div>
+                <div class="page-eyebrow">Tableau de bord</div>
+                <h1 class="page-title">Mes <em>ePortfolios</em></h1>
+            </div>
+            <a href="/generator" class="btn-new">
+                <span class="btn-new-icon">+</span>
+                Nouveau portfolio
+            </a>
+        </div>
+
+        <section class="history-section">
+            <div class="section-label">Historique</div>
+
+            <div class="skel-list" id="skeletonLoader">
+                <div class="skel-row">
+                    <div class="skel-avatar"></div>
+                    <div class="skel-lines">
+                        <div class="skel-line"></div>
+                        <div class="skel-line short"></div>
+                    </div>
+                </div>
+                <div class="skel-row">
+                    <div class="skel-avatar"></div>
+                    <div class="skel-lines">
+                        <div class="skel-line"></div>
+                        <div class="skel-line short"></div>
+                    </div>
+                </div>
+                <div class="skel-row">
+                    <div class="skel-avatar"></div>
+                    <div class="skel-lines">
+                        <div class="skel-line"></div>
+                        <div class="skel-line short"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="portfolioList" style="display:none"></div>
+
+            <div class="empty" id="emptyState" style="display:none">
+                <div class="empty-icon">✦</div>
+                <p class="empty-title">Aucun portfolio créé</p>
+                <p class="empty-sub">Cliquez sur "Nouveau portfolio" pour commencer.</p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="/static/js/dashboard.js" defer></script>
+</body>
+
+</html>
