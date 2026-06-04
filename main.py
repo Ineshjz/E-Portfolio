@@ -8,6 +8,10 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select
 from passlib.context import CryptContext
 import uuid  # tokn de session
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
+
 # templates = Jinja2Templates(directory="Templates")
 
 # nom du fichier de
@@ -38,7 +42,8 @@ def get_session():
 
 
 app = FastAPI()
-
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="Templates")
 
 # Créer les tables de base de données au démarage de l'app (si elle n'existe pas)
 @app.on_event("startup")
@@ -256,7 +261,22 @@ def create_portfolio(eportfolio: Eportfolio, request: Request, session: SessionD
 
     return {"message": "Portfolio créé avec succès", "user_id": user.user_id}
 
-
+@app.get("/portfolio/{user_id}")
+def show_portfolio(user_id: int, request: Request, session: SessionDep):
+    user = session.get(PersonalInfo_Session, user_id)
+    print(f"User trouvé : {user}")
+    projects = session.exec(select(Project).where(Project.user_id == user_id)).all()
+    skills   = [s.strip() for s in user.main_skills.split(",") if s.strip()] if user.main_skills else []
+    keywords = [k.strip() for k in user.keywords.split(",") if k.strip()] if user.keywords else []
+    return templates.TemplateResponse(
+    request=request,
+    name="portfolio.html",
+    context={
+        "personal": user,
+        "projects": projects,
+        "skills": skills,
+        "keywords": keywords,
+    })
 # ???????????????????
 # @app.post("/eportfolio/create")
 # def create_portfolio(eportfolio: Eportfolio):

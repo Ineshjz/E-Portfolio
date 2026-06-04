@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ personal.firstname }} {{ personal.lastname }} — ePortfolio</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.10" defer></script>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/portfolio.css') }}">
+</head>
+
+<body>
+    <nav class="site-nav">
+        <a href="#" class="nav-brand">e<span>P</span>ortfolio</a>
+        <ul class="nav-links">
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main style="padding-top: 64px">
+
+        <div id="hero">
+            <div class="hero-left">
+                <div class="hero-eyebrow">Portfolio · {{ personal.fields or "Engineer" }}</div>
+                <h1 class="hero-name">
+                    {{ personal.firstname }}
+                    <span class="last">{{ personal.lastname }}</span>
+                </h1>
+                <p class="hero-role">{{ personal.fields or "Engineer" }}</p>
+                <a class="hero-cta" href="#contact">Get in Touch →</a>
+            </div>
+            <div class="hero-right">
+                {% if personal.description %}
+                <div class="bio-text">{{ personal.description }}</div>
+                {% endif %}
+                <div class="stats">
+                    <div>
+                        <div class="stat-n">{{ skills | length }}</div>
+                        <div class="stat-l">Skills</div>
+                    </div>
+                    <div>
+                        <div class="stat-n">{{ projects | length }}</div>
+                        <div class="stat-l">Projects</div>
+                    </div>
+                    <div>
+                        <div class="stat-n">{{ keywords | length }}</div>
+                        <div class="stat-l">Keywords</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if skills %}
+        <section id="skills">
+            <div class="sec-wrap">
+                <div class="sec-label">
+                    <span class="sec-num">01</span>
+                    <h2 class="sec-title">Core <em>Skills</em></h2>
+                    <div class="sec-rule"></div>
+                </div>
+                <div class="skills-grid">
+                    {% for skill in skills %}
+                    <span class="skill-chip">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        {% if personal.studies %}
+        <section id="experience">
+            <div class="sec-wrap">
+                <div class="sec-label">
+                    <span class="sec-num">02</span>
+                    <h2 class="sec-title"><em>Education</em></h2>
+                    <div class="sec-rule"></div>
+                </div>
+                <div class="timeline">
+                    <div class="tl-item">
+                        <div class="tl-dot"></div>
+                        <p class="tl-desc">{{ personal.studies }}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        {% if projects %}
+        <section id="projects">
+            <div class="sec-wrap">
+                <div class="sec-label">
+                    <span class="sec-num">03</span>
+                    <h2 class="sec-title">Selected <em>Work</em></h2>
+                    <div class="sec-rule"></div>
+                </div>
+            </div>
+            <div class="proj-list">
+                {% for proj in projects %}
+                <div class="proj-item" {% if proj.url %}data-url="{{ proj.url }}" {% endif %}>
+                    <div class="proj-num">{{ "%02d" | format(loop.index) }}</div>
+                    <div class="proj-body">
+                        <div class="proj-name">{{ proj.scope or "Untitled" }}</div>
+                        {% if proj.why %}<div class="proj-desc">{{ proj.why }}</div>{% endif %}
+                        <div class="proj-tags">
+                            {% if proj.context %}<span class="proj-tag">{{ proj.context }}</span>{% endif %}
+                            {% if proj.collaborators %}<span class="proj-tag team">{{ proj.collaborators }}</span>{%
+                            endif %}
+                        </div>
+                        {% if proj.url %}
+                        <a class="proj-link" href="{{ proj.url }}" target="_blank" rel="noopener">View project →</a>
+                        {% endif %}
+                    </div>
+                    <div class="proj-arr">↗</div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        {% if keywords %}
+        <section id="keywords-section">
+            <div class="sec-wrap">
+                <div class="sec-label">
+                    <span class="sec-num">04</span>
+                    <h2 class="sec-title light">Key <em>Words</em></h2>
+                    <div class="sec-rule dim"></div>
+                </div>
+                <div class="kw-cloud">
+                    {% for kw in keywords %}
+                    <span class="kw-chip">{{ kw }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        <section id="contact">
+            <div class="contact-wrap">
+                <h2 class="contact-big">Let's <em>work</em><br>together.</h2>
+                <p class="contact-sub">Open to opportunities and collaborations.</p>
+                {% if personal.email %}
+                <a class="contact-btn" href="mailto:{{ personal.email }}">{{ personal.email }} →</a>
+                {% endif %}
+                {% if personal.links %}
+                <a class="contact-link" href="{{ personal.links }}" target="_blank" rel="noopener">{{ personal.links
+                    }}</a>
+                {% endif %}
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <strong>{{ personal.firstname }} {{ personal.lastname }}</strong> — ePortfolio
+    </footer>
+    <script src="{{ url_for('static', path='js/portfolio.js') }}" defer></script>
+</body>
+
+</html>
