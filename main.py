@@ -72,8 +72,8 @@ def verify_password(password: str, hashed_password: str):
     return pwd_context.verify(password[:72], hashed_password)
 
 
-def get_current_user(request: Request, session: Session):  # identifier iser
-    session_token = request.cookies.get("session_token")
+def get_current_user(request: Request, session: Session):  # identify user
+    session_token = request.cookies.get("session_token")  
 
     if not session_token or session_token not in sessions:
         return None
@@ -82,7 +82,7 @@ def get_current_user(request: Request, session: Session):  # identifier iser
     return session.get(AppUser, user_id)
 
 
-#####################" gestion des accès et roles"
+##################### gestion des accès et roles
 def require_user(request: Request, session: SessionDep):
     user = get_current_user(request, session)
 
@@ -256,8 +256,9 @@ def create_portfolio(eportfolio: Eportfolio, request: Request, session: SessionD
         project = Project(**project_data.model_dump(), user_id=user.user_id)
 
         session.add(project)
-        session.commit()
-        session.refresh(project)
+        #session.commit()
+        #session.refresh(project)
+    session.commit()  # commit all projects at once to improve performance
 
     return {"message": "Portfolio créé avec succès", "user_id": user.user_id}
 
