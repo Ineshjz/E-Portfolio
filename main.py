@@ -73,7 +73,7 @@ def verify_password(password: str, hashed_password: str):
 
 
 def get_current_user(request: Request, session: Session):  # identify user
-    session_token = request.cookies.get("session_token")  
+    session_token = request.cookies.get("session_token")  #reuse the session token to avoid unecessary database lookup
 
     if not session_token or session_token not in sessions:
         return None
