@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ePortfolio Generator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
       --ink: #1a1a1a;
@@ -55,7 +64,7 @@
 
     .site-header .tagline {
       font-size: 0.82rem;
-      color: rgba(255,255,255,0.45);
+      color: rgba(255, 255, 255, 0.45);
       letter-spacing: 0.1em;
       text-transform: uppercase;
       padding-bottom: 0.35rem;
@@ -97,7 +106,8 @@
     }
 
     .step-num {
-      width: 20px; height: 20px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       border: 1.5px solid currentColor;
       display: inline-flex;
@@ -138,8 +148,15 @@
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .panel-header {
@@ -207,12 +224,15 @@
       resize: vertical;
     }
 
-    input:focus, textarea:focus, select:focus {
+    input:focus,
+    textarea:focus,
+    select:focus {
       border-color: var(--border-focus);
       background: #fff;
     }
 
-    input::placeholder, textarea::placeholder {
+    input::placeholder,
+    textarea::placeholder {
       color: var(--ink-faint);
     }
 
@@ -258,7 +278,9 @@
       opacity: 0.6;
     }
 
-    .tag-chip button:hover { opacity: 1; }
+    .tag-chip button:hover {
+      opacity: 1;
+    }
 
     .tags-real-input {
       border: none !important;
@@ -305,7 +327,9 @@
       padding: 0 0.2rem;
     }
 
-    .btn-remove:hover { color: var(--danger); }
+    .btn-remove:hover {
+      color: var(--danger);
+    }
 
     .project-card-body {
       padding: 1.5rem;
@@ -438,207 +462,232 @@
     }
 
     @media (max-width: 640px) {
-      .site-header { padding: 1.5rem; }
-      .steps-bar { padding: 0 1rem; }
-      .main-layout { padding: 1.5rem 1rem; }
-      .panel-body { padding: 1.25rem; }
-      .form-grid { grid-template-columns: 1fr; }
-      .summary-grid { grid-template-columns: 1fr; }
+      .site-header {
+        padding: 1.5rem;
+      }
+
+      .steps-bar {
+        padding: 0 1rem;
+      }
+
+      .main-layout {
+        padding: 1.5rem 1rem;
+      }
+
+      .panel-body {
+        padding: 1.25rem;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<header class="site-header">
-  <div class="logo">e<span>Portfolio</span></div>
-  <span class="tagline">CV Generator</span>
-</header>
+  <header class="site-header">
+    <div class="logo">e<span>Portfolio</span></div>
+    <span class="tagline">CV Generator</span>
+  </header>
 
-<nav class="steps-bar" id="stepsBar">
-  <div class="step-tab active" data-step="0"><span class="step-num">1</span> Personal</div>
-  <div class="step-tab" data-step="1"><span class="step-num">2</span> Profile</div>
-  <div class="step-tab" data-step="2"><span class="step-num">3</span> Projects</div>
-  <div class="step-tab" data-step="3"><span class="step-num">4</span> Review</div>
-</nav>
+  <nav class="steps-bar" id="stepsBar">
+    <div class="step-tab active" data-step="0"><span class="step-num">1</span> Personal</div>
+    <div class="step-tab" data-step="1"><span class="step-num">2</span> Profile</div>
+    <div class="step-tab" data-step="2"><span class="step-num">3</span> Projects</div>
+    <div class="step-tab" data-step="3"><span class="step-num">4</span> Review</div>
+  </nav>
 
-<main class="main-layout">
+  <main class="main-layout">
 
-  <!-- Step 0 — Personal Info -->
-  <section class="panel active" id="step-0">
-    <div class="panel-header">
-      <h2 class="panel-title">Personal Information</h2>
-      <p class="panel-subtitle">How you'll appear at the top of your CV.</p>
-    </div>
-    <div class="panel-body">
-      <div class="form-grid">
-        <div class="field">
-          <label for="firstname">First name</label>
-          <input type="text" id="firstname" name="firstname" placeholder="Marie" />
-        </div>
-        <div class="field">
-          <label for="lastname">Last name</label>
-          <input type="text" id="lastname" name="lastname" placeholder="Dupont" />
-        </div>
-        <div class="field full">
-          <label for="email">Email address</label>
-          <input type="email" id="email" name="email" placeholder="marie.dupont@example.com" />
-        </div>
-        <div class="field full">
-          <label for="links">Professional links <span style="font-weight:400;text-transform:none;font-size:0.8rem;color:var(--ink-faint)">(LinkedIn, GitHub, portfolio…)</span></label>
-          <input type="text" id="links" name="links" placeholder="https://linkedin.com/in/…" />
+    <!-- Step 0 — Personal Info -->
+    <section class="panel active" id="step-0">
+      <div class="panel-header">
+        <h2 class="panel-title">Personal Information</h2>
+        <p class="panel-subtitle">How you'll appear at the top of your CV.</p>
+      </div>
+      <div class="panel-body">
+        <div class="form-grid">
+          <div class="field">
+            <label for="firstname">First name</label>
+            <input type="text" id="firstname" name="firstname" placeholder="Marie" />
+          </div>
+          <div class="field">
+            <label for="lastname">Last name</label>
+            <input type="text" id="lastname" name="lastname" placeholder="Dupont" />
+          </div>
+          <div class="field full">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" placeholder="marie.dupont@example.com" />
+          </div>
+          <div class="field full">
+            <label for="links">Professional links <span
+                style="font-weight:400;text-transform:none;font-size:0.8rem;color:var(--ink-faint)">(LinkedIn, GitHub,
+                portfolio…)</span></label>
+            <input type="text" id="links" name="links" placeholder="https://linkedin.com/in/…" />
+          </div>
         </div>
       </div>
-    </div>
-    <div class="form-footer">
-      <span></span>
-      <button class="btn btn-primary" onclick="goStep(1)">Continue →</button>
-    </div>
-  </section>
+      <div class="form-footer">
+        <span></span>
+        <button class="btn btn-primary" onclick="goStep(1)">Continue →</button>
+      </div>
+    </section>
 
-  <!-- Step 1 — Profile -->
-  <section class="panel" id="step-1">
-    <div class="panel-header">
-      <h2 class="panel-title">Profile &amp; Skills</h2>
-      <p class="panel-subtitle">A summary of who you are and what you bring.</p>
-    </div>
-    <div class="panel-body">
-      <div class="form-grid">
-        <div class="field full">
-          <label for="fields">Fields / domains</label>
-          <input type="text" id="fields" name="fields" placeholder="Web development, UX design, Data science…" />
-        </div>
-        <div class="field full">
-          <label>Main skills <span style="font-weight:400;text-transform:none;font-size:0.8rem;color:var(--ink-faint)">— press Enter to add</span></label>
-          <div class="tags-input-wrap" id="skillsWrap" onclick="document.getElementById('skillInput').focus()">
-            <input class="tags-real-input" id="skillInput" placeholder="Python, React, Figma…" />
+    <!-- Step 1 — Profile -->
+    <section class="panel" id="step-1">
+      <div class="panel-header">
+        <h2 class="panel-title">Profile &amp; Skills</h2>
+        <p class="panel-subtitle">A summary of who you are and what you bring.</p>
+      </div>
+      <div class="panel-body">
+        <div class="form-grid">
+          <div class="field full">
+            <label for="fields">Fields / domains</label>
+            <input type="text" id="fields" name="fields" placeholder="Web development, UX design, Data science…" />
           </div>
-          <input type="hidden" id="main_skills" name="main_skills" />
-        </div>
-        <div class="field full">
-          <label>Keywords <span style="font-weight:400;text-transform:none;font-size:0.8rem;color:var(--ink-faint)">— press Enter to add</span></label>
-          <div class="tags-input-wrap" id="kwWrap" onclick="document.getElementById('kwInput').focus()">
-            <input class="tags-real-input" id="kwInput" placeholder="AI, Open-source, Agile…" />
+          <div class="field full">
+            <label>Main skills <span
+                style="font-weight:400;text-transform:none;font-size:0.8rem;color:var(--ink-faint)">— press Enter to
+                add</span></label>
+            <div class="tags-input-wrap" id="skillsWrap" onclick="document.getElementById('skillInput').focus()">
+              <input class="tags-real-input" id="skillInput" placeholder="Python, React, Figma…" />
+            </div>
+            <input type="hidden" id="main_skills" name="main_skills" />
           </div>
-          <input type="hidden" id="keywords" name="keywords" />
-        </div>
-        <div class="field full">
-          <label for="description">Personal statement</label>
-          <textarea id="description" name="description" rows="4" placeholder="A short paragraph about your goals, interests, and what makes you unique…"></textarea>
-        </div>
-        <div class="field full">
-          <label for="studies">Education</label>
-          <textarea id="studies" name="studies" rows="3" placeholder="MSc Computer Science — Université de Montpellier, 2023…"></textarea>
+          <div class="field full">
+            <label>Keywords <span style="font-weight:400;text-transform:none;font-size:0.8rem;color:var(--ink-faint)">—
+                press Enter to add</span></label>
+            <div class="tags-input-wrap" id="kwWrap" onclick="document.getElementById('kwInput').focus()">
+              <input class="tags-real-input" id="kwInput" placeholder="AI, Open-source, Agile…" />
+            </div>
+            <input type="hidden" id="keywords" name="keywords" />
+          </div>
+          <div class="field full">
+            <label for="description">Personal statement</label>
+            <textarea id="description" name="description" rows="4"
+              placeholder="A short paragraph about your goals, interests, and what makes you unique…"></textarea>
+          </div>
+          <div class="field full">
+            <label for="studies">Education</label>
+            <textarea id="studies" name="studies" rows="3"
+              placeholder="MSc Computer Science — Université de Montpellier, 2023…"></textarea>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="form-footer">
-      <button class="btn btn-secondary" onclick="goStep(0)">← Back</button>
-      <button class="btn btn-primary" onclick="goStep(2)">Continue →</button>
-    </div>
-  </section>
+      <div class="form-footer">
+        <button class="btn btn-secondary" onclick="goStep(0)">← Back</button>
+        <button class="btn btn-primary" onclick="goStep(2)">Continue →</button>
+      </div>
+    </section>
 
-  <!-- Step 2 — Projects -->
-  <section class="panel" id="step-2">
-    <div class="panel-header">
-      <h2 class="panel-title">Projects</h2>
-      <p class="panel-subtitle">Describe the work you want to showcase.</p>
-    </div>
-    <div class="panel-body">
-      <div id="projectsList"></div>
-      <button class="btn-add" onclick="addProject()">+ Add a project</button>
-    </div>
-    <div class="form-footer">
-      <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
-      <button class="btn btn-primary" onclick="goStep(3)">Continue →</button>
-    </div>
-  </section>
+    <!-- Step 2 — Projects -->
+    <section class="panel" id="step-2">
+      <div class="panel-header">
+        <h2 class="panel-title">Projects</h2>
+        <p class="panel-subtitle">Describe the work you want to showcase.</p>
+      </div>
+      <div class="panel-body">
+        <div id="projectsList"></div>
+        <button class="btn-add" onclick="addProject()">+ Add a project</button>
+      </div>
+      <div class="form-footer">
+        <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
+        <button class="btn btn-primary" onclick="goStep(3)">Continue →</button>
+      </div>
+    </section>
 
-  <!-- Step 3 — Review -->
-  <section class="panel" id="step-3">
-    <div class="panel-header">
-      <h2 class="panel-title">Review &amp; Submit</h2>
-      <p class="panel-subtitle">Check your details before generating.</p>
-    </div>
-    <div class="panel-body" id="reviewBody">
-    </div>
-    <div class="form-footer">
-      <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
-      <button class="btn btn-submit" onclick="submitPortfolio()">Generate ePortfolio ✦</button>
-    </div>
-  </section>
+    <!-- Step 3 — Review -->
+    <section class="panel" id="step-3">
+      <div class="panel-header">
+        <h2 class="panel-title">Review &amp; Submit</h2>
+        <p class="panel-subtitle">Check your details before generating.</p>
+      </div>
+      <div class="panel-body" id="reviewBody">
+      </div>
+      <div class="form-footer">
+        <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
+        <button class="btn btn-submit" onclick="submitPortfolio()">Generate ePortfolio ✦</button>
+      </div>
+    </section>
 
-</main>
+  </main>
 
-<div class="toast" id="toast"></div>
+  <div class="toast" id="toast"></div>
 
-<script>
-  let currentStep = 0;
-  const totalSteps = 4;
+  <script>
+    let currentStep = 0;
+    const totalSteps = 4;
 
-  const skills = [];
-  const keywords = [];
-  let projectCount = 0;
+    const skills = [];
+    const keywords = [];
+    let projectCount = 0;
 
-  /* ── Step navigation ── */
-  function goStep(n) {
-    document.getElementById(`step-${currentStep}`).classList.remove('active');
-    document.querySelectorAll('.step-tab').forEach((t, i) => {
-      t.classList.remove('active', 'done');
-      if (i < n) t.classList.add('done');
-    });
-    currentStep = n;
-    document.getElementById(`step-${n}`).classList.add('active');
-    document.querySelectorAll('.step-tab')[n].classList.add('active');
-    if (n === 3) buildReview();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+    /* ── Step navigation ── */
+    function goStep(n) {
+      document.getElementById(`step-${currentStep}`).classList.remove('active');
+      document.querySelectorAll('.step-tab').forEach((t, i) => {
+        t.classList.remove('active', 'done');
+        if (i < n) t.classList.add('done');
+      });
+      currentStep = n;
+      document.getElementById(`step-${n}`).classList.add('active');
+      document.querySelectorAll('.step-tab')[n].classList.add('active');
+      if (n === 3) buildReview();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-  /* ── Tags ── */
-  function makeTagSystem(inputId, wrapId, arr, hiddenId) {
-    const inp = document.getElementById(inputId);
-    inp.addEventListener('keydown', e => {
-      if ((e.key === 'Enter' || e.key === ',') && inp.value.trim()) {
-        e.preventDefault();
-        const val = inp.value.replace(',', '').trim();
-        if (val && !arr.includes(val)) {
-          arr.push(val);
-          renderTags(wrapId, inputId, arr, hiddenId);
+    /* ── Tags ── */
+    function makeTagSystem(inputId, wrapId, arr, hiddenId) {
+      const inp = document.getElementById(inputId);
+      inp.addEventListener('keydown', e => {
+        if ((e.key === 'Enter' || e.key === ',') && inp.value.trim()) {
+          e.preventDefault();
+          const val = inp.value.replace(',', '').trim();
+          if (val && !arr.includes(val)) {
+            arr.push(val);
+            renderTags(wrapId, inputId, arr, hiddenId);
+          }
+          inp.value = '';
         }
-        inp.value = '';
-      }
-    });
-  }
+      });
+    }
 
-  function renderTags(wrapId, inputId, arr, hiddenId) {
-    const wrap = document.getElementById(wrapId);
-    const inp = document.getElementById(inputId);
-    wrap.innerHTML = '';
-    arr.forEach((tag, i) => {
-      const chip = document.createElement('span');
-      chip.className = 'tag-chip';
-      chip.innerHTML = `${tag}<button onclick="removeTag(${i},'${wrapId}','${inputId}',${JSON.stringify(arr)},'${hiddenId}')">×</button>`;
-      wrap.appendChild(chip);
-    });
-    wrap.appendChild(inp);
-    document.getElementById(hiddenId).value = arr.join(', ');
-  }
+    function renderTags(wrapId, inputId, arr, hiddenId) {
+      const wrap = document.getElementById(wrapId);
+      const inp = document.getElementById(inputId);
+      wrap.innerHTML = '';
+      arr.forEach((tag, i) => {
+        const chip = document.createElement('span');
+        chip.className = 'tag-chip';
+        chip.innerHTML = `${tag}<button onclick="removeTag(${i},'${wrapId}','${inputId}',${JSON.stringify(arr)},'${hiddenId}')">×</button>`;
+        wrap.appendChild(chip);
+      });
+      wrap.appendChild(inp);
+      document.getElementById(hiddenId).value = arr.join(', ');
+    }
 
-  function removeTag(i, wrapId, inputId, arr, hiddenId) {
-    arr.splice(i, 1);
-    renderTags(wrapId, inputId, arr, hiddenId);
-  }
+    function removeTag(i, wrapId, inputId, arr, hiddenId) {
+      arr.splice(i, 1);
+      renderTags(wrapId, inputId, arr, hiddenId);
+    }
 
-  makeTagSystem('skillInput', 'skillsWrap', skills, 'main_skills');
-  makeTagSystem('kwInput', 'kwWrap', keywords, 'keywords');
+    makeTagSystem('skillInput', 'skillsWrap', skills, 'main_skills');
+    makeTagSystem('kwInput', 'kwWrap', keywords, 'keywords');
 
-  /* ── Projects ── */
-  function addProject() {
-    projectCount++;
-    const id = projectCount;
-    const div = document.createElement('div');
-    div.className = 'project-card';
-    div.id = `proj-${id}`;
-    div.innerHTML = `
+    /* ── Projects ── */
+    function addProject() {
+      projectCount++;
+      const id = projectCount;
+      const div = document.createElement('div');
+      div.className = 'project-card';
+      div.id = `proj-${id}`;
+      div.innerHTML = `
       <div class="project-card-header">
         <span class="project-card-title">Project ${id}</span>
         <button class="btn-remove" onclick="removeProject(${id})" title="Remove">×</button>
@@ -672,18 +721,28 @@
         </div>
       </div>
     `;
-    document.getElementById('projectsList').appendChild(div);
-  }
+      document.getElementById('projectsList').appendChild(div);
+    }
 
-  function removeProject(id) {
-    document.getElementById(`proj-${id}`)?.remove();
-  }
+    function removeProject(id) {
+      document.getElementById(`proj-${id}`)?.remove();
+    }
 
-  /* ── Review ── */
-  function buildReview() {
-    const get = id => document.getElementById(id)?.value || '—';
-    const body = document.getElementById('reviewBody');
-    body.innerHTML = `
+    /* ── Review ── */
+    function buildReview() {
+      // Auto-flush avant de lire les valeurs
+      const flushInput = (inputId, arr, hiddenId) => {
+        const val = document.getElementById(inputId)?.value?.trim();
+        if (val && !arr.includes(val)) {
+          arr.push(val);
+          document.getElementById(hiddenId).value = arr.join(', ');
+        }
+      };
+      flushInput('skillInput', skills, 'main_skills');
+      flushInput('kwInput', keywords, 'keywords');
+      const get = id => document.getElementById(id)?.value || '—';
+      const body = document.getElementById('reviewBody');
+      body.innerHTML = `
       <h3 style="font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:1rem;color:var(--ink-muted)">Personal</h3>
       <div class="summary-grid" style="margin-bottom:2rem">
         <div class="summary-item"><div class="si-label">First name</div><div class="si-value">${get('firstname')}</div></div>
@@ -700,62 +759,90 @@
       </div>
       <h3 style="font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:1rem;color:var(--ink-muted)">Projects — ${document.querySelectorAll('.project-card').length} added</h3>
     `;
-  }
-
-  /* ── Submit ── */
-  async function submitPortfolio() {
-    const get = id => document.getElementById(id)?.value?.trim() || '';
-
-    const personal_info = {
-      firstname: get('firstname'),
-      lastname: get('lastname'),
-      email: get('email'),
-      fields: get('fields'),
-      keywords: get('keywords'),
-      description: get('description'),
-      main_skills: get('main_skills'),
-      studies: get('studies'),
-      links: get('links'),
-    };
-
-    const project_description = [];
-    const project_visual = [];
-
-    document.querySelectorAll('.project-card').forEach(card => {
-      const id = card.id.split('-')[1];
-      const qn = n => card.querySelector(`[name=proj_${n}_${id}]`)?.value?.trim() || '';
-      project_description.push({
-        scope: qn('scope'), why: qn('why'), context: qn('context'),
-        collaborators: qn('collaborators'), url: qn('url'),
-      });
-      project_visual.push({
-        image: qn('image'), video: '', url: qn('url'), comments: '',
-      });
-    });
-
-    const payload = { personal_info, project_description, project_visual };
-
-    try {
-      const res = await fetch('/eportfolio', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error(`Server error ${res.status}`);
-      showToast('✓ ePortfolio submitted successfully!');
-    } catch (err) {
-      showToast('⚠ ' + err.message);
     }
-  }
 
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-  }
+    /* ── Submit ── */
+    async function submitPortfolio() {
+      // Auto-flush tags non validés
+      const flushInput = (inputId, arr, hiddenId) => {
+        const val = document.getElementById(inputId)?.value?.trim();
+        if (val && !arr.includes(val)) {
+          arr.push(val);
+          document.getElementById(hiddenId).value = arr.join(', ');
+        }
+      };
+      flushInput('skillInput', skills, 'main_skills');
+      flushInput('kwInput', keywords, 'keywords');
 
-  addProject();
-</script>
+
+      const get = id => document.getElementById(id)?.value?.trim() || '';
+
+      const personal_info = {
+        firstname: get('firstname'),
+        lastname: get('lastname'),
+        email: get('email'),
+        fields: get('fields'),
+        keywords: get('keywords'),
+        description: get('description'),
+        main_skills: get('main_skills'),
+        studies: get('studies'),
+        links: get('links'),
+      };
+
+      const project_description = [];
+      const project_visual = [];
+
+      document.querySelectorAll('.project-card').forEach(card => {
+        const id = card.id.split('-')[1];
+        const qn = n => card.querySelector(`[name=proj_${n}_${id}]`)?.value?.trim() || '';
+        project_description.push({
+          scope: qn('scope'), why: qn('why'), context: qn('context'),
+          collaborators: qn('collaborators'), url: qn('url'),
+        });
+        project_visual.push({
+          image: qn('image'), video: '', url: qn('url'), comments: '',
+        });
+      });
+
+      const payload = { personal_info, project_description, project_visual };
+
+
+      try {
+        const res = await fetch('/eportfolio', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          console.error('Erreur serveur:', JSON.stringify(err));
+          showToast('⚠ Erreur ' + res.status);
+          return;
+        }
+
+        const data = await res.json();
+        const form = document.createElement('form');
+        form.method = 'GET';
+        form.action = `/portfolio/${data.user_id}`;
+        document.body.appendChild(form);
+        form.submit();
+
+      } catch (err) {
+        showToast('⚠ ' + err.message);
+      }
+    }
+
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    addProject();
+  </script>
 </body>
+
 </html>
