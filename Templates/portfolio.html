@@ -26,15 +26,15 @@
 
         <div id="hero">
             <div class="hero-left">
-                <div class="hero-eyebrow">Portfolio · {{ personal.fields or "Engineer" }}</div>
+                <div class="hero-eyebrow">Portfolio</div>
                 <h1 class="hero-name">
                     {{ personal.firstname }}
                     <span class="last">{{ personal.lastname }}</span>
                 </h1>
-                <p class="hero-role">{{ personal.fields or "Engineer" }}</p>
                 <a class="hero-cta" href="#contact">Get in Touch →</a>
             </div>
             <div class="hero-right">
+                <div class="hero-role">{{ personal.fields or "Engineer" }}</div>
                 {% if personal.description %}
                 <div class="bio-text">{{ personal.description }}</div>
                 {% endif %}

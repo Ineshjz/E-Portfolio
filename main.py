@@ -158,8 +158,8 @@ class Eportfolio(BaseModel):
 
 
 @app.get("/")
-def landing_page():
-    return FileResponse("Templates/landing.html")
+def index_page():
+    return FileResponse("Templates/index.html")
 
 
 @app.get("/auth")
@@ -167,15 +167,26 @@ def auth_page():
     return FileResponse("Templates/auth.html")
 
 
-@app.get("/portfolio")  # accès uniquement si connecté
+# @app.get("/portfolio")  # accès uniquement si connecté
+# def portfolio_page(request: Request, session: SessionDep):
+#     user = require_user(request, session)
+
+#     if user.role == "admin":
+#         return RedirectResponse("/admin", status_code=303)
+
+#     return FileResponse("Templates/dashboard.html")
+
+@app.get("/dashboard")
 def portfolio_page(request: Request, session: SessionDep):
     user = require_user(request, session)
-
     if user.role == "admin":
         return RedirectResponse("/admin", status_code=303)
+    return FileResponse("Templates/dashboard.html")
 
-    return FileResponse("Templates/index.html")
-
+@app.get("/generator")
+def generator_page(request: Request, session: SessionDep):
+    require_user(request, session)
+    return FileResponse("Templates/parametrage.html")
 
 @app.get("/admin")
 def admin_page(request: Request, session: SessionDep):
@@ -201,7 +212,7 @@ def register(
     token = str(uuid.uuid4())
     sessions[token] = user.id
 
-    response = RedirectResponse("/portfolio", status_code=303)
+    response = RedirectResponse("/dashboard", status_code=303)
     response.set_cookie(key="session_token", value=token, httponly=True)
 
     return response
@@ -220,7 +231,7 @@ def login(session: SessionDep, email: EmailStr = Form(...), password: str = Form
     if user.role == "admin":
         redirect_url = "/admin"
     else:
-        redirect_url = "/portfolio"
+        redirect_url = "/dashboard"
 
     response = RedirectResponse(redirect_url, status_code=303)
     response.set_cookie(key="session_token", value=token, httponly=True)
@@ -280,6 +291,12 @@ def show_portfolio(user_id: int, request: Request, session: SessionDep):
     })
 
 #     return ""
+
+@app.get("/portfolio")
+def portfolio_redirect():
+    return RedirectResponse("/dashboard", status_code=301)
+
+
 @app.get("/api/admin/users")  # sur admin permets d'afficher tous les comptes
 def get_users(request: Request, session: SessionDep):
     require_admin(request, session)
@@ -353,6 +370,18 @@ def delete_user(user_id: int, request: Request, session: SessionDep):
 
     return {"message": "Utilisateur supprimé"}
 
+@app.get("/api/me")
+def get_me(request: Request, session: SessionDep):
+    user = get_current_user(request, session)
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    return {"email": user.email, "role": user.role, "id": user.id}
+
+
+@app.get("/api/my-portfolios")
+def get_my_portfolios(request: Request, session: SessionDep):
+    require_user(request, session)
+    return []
 
 if __name__ == "__main__":
     import uvicorn
