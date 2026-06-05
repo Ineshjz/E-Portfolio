@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ── BDD ───────────────────────────────────────────────────────────────
+# BDD
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 engine = create_engine(
@@ -31,6 +31,7 @@ def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
 
 
+# Permettre de stocker les objects en mémoire
 def get_session():
     with Session(engine) as session:
         yield session
@@ -38,7 +39,7 @@ def get_session():
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
-# ── AUTH UTILS ────────────────────────────────────────────────────────
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
@@ -50,7 +51,6 @@ def verify_password(password: str, hashed_password: str):
     return pwd_context.verify(password[:72], hashed_password)
 
 
-# ── SLUG UTILS ────────────────────────────────────────────────────────
 def generate_slug(firstname: str, lastname: str, session: Session) -> str:
     base = f"{firstname}-{lastname}".lower()
     base = re.sub(r"[^a-z0-9-]", "", base.replace(" ", "-"))
@@ -62,7 +62,7 @@ def generate_slug(firstname: str, lastname: str, session: Session) -> str:
             return slug
 
 
-# ── MODELS ────────────────────────────────────────────────────────────
+# MODELS
 class UserRole(str, Enum):
     user = "user"
     admin = "admin"
@@ -125,7 +125,7 @@ class ProjectVisual(SQLModel, table=True):
     comments: str | None = None
 
 
-# ── SCHEMAS API ───────────────────────────────────────────────────────
+# SCHEMAS API
 class PersonalInfoInput(SQLModel):
     firstname: str
     lastname: str
@@ -168,7 +168,7 @@ class EportfolioInput(SQLModel):
     project_visual: list[ProjectVisualInput] = []
 
 
-# ── SESSION HELPERS ───────────────────────────────────────────────────
+# SESSION HELPERS
 def get_current_user(request: Request, session: Session):
     token = request.cookies.get("session_token")
     if not token:
@@ -235,7 +235,7 @@ def admin_page(request: Request, session: SessionDep):
     return FileResponse("Templates/admin.html")
 
 
-# ── AUTH ROUTES ───────────────────────────────────────────────────────
+# AUTH ROUTES
 @app.post("/register")
 def register(
     session: SessionDep, email: EmailStr = Form(...), password: str = Form(...)
@@ -275,7 +275,9 @@ def login(session: SessionDep, email: EmailStr = Form(...), password: str = Form
 
 @app.get("/logout")
 def logout(request: Request, session: SessionDep):
-    token = request.cookies.get("session_token")
+    token = request.cookies.get(
+        "session_token"
+    )  # reuse the session token to avoid unecessary database lookup
     if token:
         user_session = session.get(UserSession, token)
         if user_session:
@@ -286,7 +288,7 @@ def logout(request: Request, session: SessionDep):
     return response
 
 
-# ── PORTFOLIO ROUTES ──────────────────────────────────────────────────
+# PORTFOLIO ROUTES
 @app.post("/eportfolio")
 def create_portfolio(
     eportfolio: EportfolioInput, request: Request, session: SessionDep
@@ -351,7 +353,7 @@ def portfolio_redirect():
     return RedirectResponse("/dashboard", status_code=301)
 
 
-# ── API ROUTES ────────────────────────────────────────────────────────
+# API ROUTES
 @app.get("/api/me")
 def get_me(request: Request, session: SessionDep):
     user = get_current_user(request, session)
