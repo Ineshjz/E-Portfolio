@@ -60,7 +60,7 @@ Browser (HTML/CSS/JS)
       SQLModel
           │
           ▼
- PostgreSQL / SQLite
+      PostgreSQL
 ```
 
 ## Deployment
@@ -72,7 +72,7 @@ GitHub
 Render
    │
    ▼
-FastAPI Application
+FastAPI Application online
 ```
 
 ## Database Structure
