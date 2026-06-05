@@ -57,7 +57,7 @@ function buildRow(p) {
         .join('');
 
     return `
-    <a class="port-row" href="/portfolio/${p.user_id}">
+    <a class="port-row" href="/portfolio/${p.slug}">
       <div class="row-avatar">${initials}</div>
       <div class="row-info">
         <div class="row-name">${p.firstname} ${p.lastname}</div>
