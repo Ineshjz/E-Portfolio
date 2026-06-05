@@ -13,6 +13,7 @@ import re
 import os
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 # ── BDD ───────────────────────────────────────────────────────────────
@@ -53,12 +54,12 @@ def verify_password(password: str, hashed_password: str):
 def generate_slug(firstname: str, lastname: str, session: Session) -> str:
     base = f"{firstname}-{lastname}".lower()
     base = re.sub(r"[^a-z0-9-]", "", base.replace(" ", "-"))
-    slug = base
-    counter = 1
-    while session.exec(select(Portfolio).where(Portfolio.slug == slug)).first():
-        slug = f"{base}-{counter}"
-        counter += 1
-    return slug
+    if not session.exec(select(Portfolio).where(Portfolio.slug == base)).first():
+        return base
+    while True:
+        slug = f"{base}-{uuid.uuid4().hex[:6]}"
+        if not session.exec(select(Portfolio).where(Portfolio.slug == slug)).first():
+            return slug
 
 
 # ── MODELS ────────────────────────────────────────────────────────────
