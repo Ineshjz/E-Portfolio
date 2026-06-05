@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <title>Connexion — Eportfolio Generator</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,500&family=Inter:wght@400;500&display=swap"
+    rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       min-height: 100vh;
@@ -39,6 +48,7 @@
       margin-bottom: 0.2rem;
       line-height: 1.2;
     }
+
     .auth-heading em {
       font-style: italic;
       color: #c9a84c;
@@ -68,10 +78,13 @@
       position: relative;
       overflow: hidden;
     }
+
     .auth-card::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       height: 1px;
       background: linear-gradient(90deg, transparent, #c9a84c66, transparent);
     }
@@ -106,8 +119,14 @@
       outline: none;
       transition: border-color 0.2s;
     }
-    .auth-card input::placeholder { color: #555; }
-    .auth-card input:focus { border-color: #c9a84c99; }
+
+    .auth-card input::placeholder {
+      color: #555;
+    }
+
+    .auth-card input:focus {
+      border-color: #c9a84c99;
+    }
 
     .auth-card small {
       display: block;
@@ -116,6 +135,7 @@
       margin-bottom: 1.2rem;
       line-height: 1.5;
     }
+
     .auth-card small strong {
       color: #c9a84c;
       font-weight: 500;
@@ -138,8 +158,14 @@
       justify-content: center;
       gap: 8px;
     }
-    .auth-btn:hover { background: #dbb95a; }
-    .auth-btn:active { transform: scale(0.98); }
+
+    .auth-btn:hover {
+      background: #dbb95a;
+    }
+
+    .auth-btn:active {
+      transform: scale(0.98);
+    }
 
     .auth-footer {
       display: flex;
@@ -148,6 +174,7 @@
       color: #4a4535;
       font-size: 12px;
     }
+
     .auth-footer span {
       display: flex;
       align-items: center;
@@ -155,6 +182,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <div class="auth-badge">Eportfolio Generator</div>
@@ -194,5 +222,16 @@
     <span><i class="ti ti-sparkles"></i> Professionnel</span>
   </div>
 
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('error') === 'invalid') {
+      const msg = document.createElement('div');
+      msg.textContent = 'Email ou mot de passe incorrect.';
+      msg.style.cssText = 'color:#c0392b;text-align:center;margin-top:1rem;font-size:14px;';
+      document.querySelector('.auth-cards').after(msg);
+    }
+  </script>
+
 </body>
+
 </html>

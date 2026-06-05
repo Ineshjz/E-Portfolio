@@ -822,9 +822,10 @@
         }
 
         const data = await res.json();
+        console.log('Réponse API:', data);
         const form = document.createElement('form');
         form.method = 'GET';
-        form.action = `/portfolio/${data.user_id}`;
+        form.action = `/portfolio/${data.slug}`;
         document.body.appendChild(form);
         form.submit();
 
