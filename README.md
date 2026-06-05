@@ -129,7 +129,7 @@ AppUser
 ## Installation
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Ineshjz/E-Portfolio.git
 cd E-Portfolio
 
 python -m venv .env
