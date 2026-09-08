@@ -336,6 +336,9 @@ def show_portfolio(slug: str, request: Request, session: SessionDep):
     skills = [s.strip() for s in profile.main_skills.split(",") if s.strip()]
     keywords = [k.strip() for k in profile.keywords.split(",") if k.strip()]
 
+    current_user = get_current_user(request, session)
+    is_owner = bool(current_user and current_user.id == portfolio.user_id)
+
     return templates.TemplateResponse(
         request=request,
         name="portfolio.html",
@@ -344,6 +347,8 @@ def show_portfolio(slug: str, request: Request, session: SessionDep):
             "projects": projects,
             "skills": skills,
             "keywords": keywords,
+            "slug": slug,
+            "is_owner": is_owner,
         },
     )
 
@@ -388,6 +393,38 @@ def get_my_portfolios(request: Request, session: SessionDep):
                 )
             )
     return result
+
+
+@app.delete("/api/portfolio/{slug}")
+def delete_portfolio(slug: str, request: Request, session: SessionDep):
+    current_user = require_user(request, session)
+
+    portfolio = session.exec(select(Portfolio).where(Portfolio.slug == slug)).first()
+    if not portfolio:
+        raise HTTPException(status_code=404, detail="Portfolio introuvable")
+    if portfolio.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Action non autorisée")
+
+    projects = session.exec(
+        select(Project).where(Project.portfolio_id == portfolio.id)
+    ).all()
+    for project in projects:
+        visuals = session.exec(
+            select(ProjectVisual).where(ProjectVisual.project_id == project.id)
+        ).all()
+        for visual in visuals:
+            session.delete(visual)
+        session.delete(project)
+
+    profile = session.exec(
+        select(PersonalInfo).where(PersonalInfo.portfolio_id == portfolio.id)
+    ).first()
+    if profile:
+        session.delete(profile)
+
+    session.delete(portfolio)
+    session.commit()
+    return {"message": "Portfolio supprimé"}
 
 
 @app.get("/api/admin/users")

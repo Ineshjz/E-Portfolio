@@ -99,6 +99,31 @@
     }
 
     /* ──────────────────────────────────────────────────────────
+         SUPPRESSION DU PORTFOLIO (propriétaire uniquement)
+      ────────────────────────────────────────────────────────── */
+    function initDeletePortfolio() {
+        const btn = document.getElementById('deletePortfolioBtn');
+        if (!btn) return;
+
+        btn.addEventListener('click', async () => {
+            const slug = btn.dataset.slug;
+            if (!confirm('Supprimer définitivement ce portfolio ? Cette action est irréversible.')) {
+                return;
+            }
+
+            btn.disabled = true;
+            try {
+                const res = await fetch(`/api/portfolio/${slug}`, { method: 'DELETE' });
+                if (!res.ok) throw new Error();
+                window.location.href = '/dashboard';
+            } catch (_) {
+                btn.disabled = false;
+                alert('Impossible de supprimer le portfolio. Réessayez.');
+            }
+        });
+    }
+
+    /* ──────────────────────────────────────────────────────────
           INITIALISATION
           Lance toutes les fonctions après le chargement du DOM.
        ────────────────────────────────────────────────────────── */
@@ -107,6 +132,7 @@
         initSkillsStagger();
         initProjectsStagger();
         initProjectLinks();
+        initDeletePortfolio();
     });
 
 })();

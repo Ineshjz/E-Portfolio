@@ -15,12 +15,19 @@
 <body>
     <nav class="site-nav">
         <a href="#" class="nav-brand">e<span>P</span>ortfolio</a>
-        <ul class="nav-links">
-            <li><a href="/dashboard">← Retour</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
+        <div class="nav-right">
+            <ul class="nav-links">
+                <li><a href="/dashboard">← Retour</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            {% if is_owner %}
+            <button type="button" class="btn-delete-portfolio" id="deletePortfolioBtn" data-slug="{{ slug }}">
+                Supprimer
+            </button>
+            {% endif %}
+        </div>
     </nav>
 
     <main style="padding-top: 64px">
