@@ -87,6 +87,9 @@ class Portfolio(SQLModel, table=True):
     user_id: int = Field(foreign_key="appuser.id")
     slug: str = Field(unique=True, index=True)
     is_public: bool = Field(default=True)
+    # Secret credential for Share Links (slug + token), distinct from the
+    # permanent slug. Regenerating it invalidates every previously issued link.
+    share_token: str = Field(default_factory=lambda: uuid.uuid4().hex, unique=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 
@@ -145,6 +148,7 @@ class PersonalInfoResponse(SQLModel):
     lastname: str
     fields: str
     main_skills: str
+    is_public: bool
 
 
 class ProjectInput(SQLModel):
@@ -318,9 +322,20 @@ def create_portfolio(
 
 
 @app.get("/portfolio/{slug}")
-def show_portfolio(slug: str, request: Request, session: SessionDep):
+def show_portfolio(
+    slug: str, request: Request, session: SessionDep, token: str | None = None
+):
     portfolio = session.exec(select(Portfolio).where(Portfolio.slug == slug)).first()
     if not portfolio:
+        raise HTTPException(status_code=404, detail="Portfolio introuvable")
+
+    current_user = get_current_user(request, session)
+    is_owner = bool(current_user and current_user.id == portfolio.user_id)
+
+    # A Private Portfolio is only viewable by its Owner or by a request
+    # presenting the current share token; anyone else gets the same 404 as a
+    # nonexistent slug, so a guess can't confirm the Portfolio exists.
+    if not portfolio.is_public and not is_owner and token != portfolio.share_token:
         raise HTTPException(status_code=404, detail="Portfolio introuvable")
 
     profile = session.exec(
@@ -336,8 +351,7 @@ def show_portfolio(slug: str, request: Request, session: SessionDep):
     skills = [s.strip() for s in profile.main_skills.split(",") if s.strip()]
     keywords = [k.strip() for k in profile.keywords.split(",") if k.strip()]
 
-    current_user = get_current_user(request, session)
-    is_owner = bool(current_user and current_user.id == portfolio.user_id)
+    share_url = f"{str(request.base_url).rstrip('/')}/portfolio/{slug}?token={portfolio.share_token}"
 
     return templates.TemplateResponse(
         request=request,
@@ -349,6 +363,8 @@ def show_portfolio(slug: str, request: Request, session: SessionDep):
             "keywords": keywords,
             "slug": slug,
             "is_owner": is_owner,
+            "is_public": portfolio.is_public,
+            "share_url": share_url,
         },
     )
 
@@ -356,6 +372,44 @@ def show_portfolio(slug: str, request: Request, session: SessionDep):
 @app.get("/portfolio")
 def portfolio_redirect():
     return RedirectResponse("/dashboard", status_code=301)
+
+
+@app.post("/api/portfolio/{slug}/visibility")
+def set_portfolio_visibility(
+    slug: str, request: Request, session: SessionDep, is_public: bool = Form(...)
+):
+    current_user = require_user(request, session)
+
+    portfolio = session.exec(select(Portfolio).where(Portfolio.slug == slug)).first()
+    if not portfolio:
+        raise HTTPException(status_code=404, detail="Portfolio introuvable")
+    if portfolio.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Action non autorisée")
+
+    portfolio.is_public = is_public
+    session.add(portfolio)
+    session.commit()
+    return {"is_public": portfolio.is_public}
+
+
+@app.post("/api/portfolio/{slug}/share-token")
+def regenerate_share_token(slug: str, request: Request, session: SessionDep):
+    current_user = require_user(request, session)
+
+    portfolio = session.exec(select(Portfolio).where(Portfolio.slug == slug)).first()
+    if not portfolio:
+        raise HTTPException(status_code=404, detail="Portfolio introuvable")
+    if portfolio.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Action non autorisée")
+
+    # A fresh token immediately invalidates every Share Link built from the
+    # previous one, since old links carry the old token.
+    portfolio.share_token = uuid.uuid4().hex
+    session.add(portfolio)
+    session.commit()
+
+    share_url = f"{str(request.base_url).rstrip('/')}/portfolio/{slug}?token={portfolio.share_token}"
+    return {"share_token": portfolio.share_token, "share_url": share_url}
 
 
 # API ROUTES
@@ -390,6 +444,7 @@ def get_my_portfolios(request: Request, session: SessionDep):
                     lastname=profile.lastname,
                     fields=profile.fields,
                     main_skills=profile.main_skills,
+                    is_public=p.is_public,
                 )
             )
     return result
