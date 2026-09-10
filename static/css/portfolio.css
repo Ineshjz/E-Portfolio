@@ -709,6 +709,16 @@ main.has-owner-bar {
     gap: .4rem;
 }
 
+.proj-visual {
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-bottom: .3rem;
+}
+
 .proj-name {
     font-family: 'Playfair Display', serif;
     font-weight: 700;
