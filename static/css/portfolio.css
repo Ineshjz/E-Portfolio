@@ -821,7 +821,7 @@ main.has-owner-bar {
 
 /* ══ CONTACT ══════════════════════════════════ */
 #contact {
-    background: var(--accent);
+    background: #110791;
     position: relative;
     overflow: hidden;
 }
