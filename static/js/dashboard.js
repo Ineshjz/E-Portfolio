@@ -56,6 +56,10 @@ function buildRow(p) {
         .map(s => `<span class="skill-chip">${s}</span>`)
         .join('');
 
+    const visibilityBadge = p.is_public
+        ? `<span class="visibility-badge">Public</span>`
+        : `<span class="visibility-badge private">Privé</span>`;
+
     return `
     <a class="port-row" href="/portfolio/${p.slug}">
       <div class="row-avatar">${initials}</div>
@@ -63,6 +67,7 @@ function buildRow(p) {
         <div class="row-name">${p.firstname} ${p.lastname}</div>
         ${p.fields ? `<div class="row-fields">${p.fields}</div>` : ''}
       </div>
+      ${visibilityBadge}
       ${skills ? `<div class="row-skills">${skills}</div>` : ''}
       <span class="row-arrow">→</span>
     </a>`;

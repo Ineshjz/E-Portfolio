@@ -124,6 +124,89 @@
     }
 
     /* ──────────────────────────────────────────────────────────
+         VISIBILITÉ DU PORTFOLIO (Public / Privé) — propriétaire uniquement
+      ────────────────────────────────────────────────────────── */
+    function initVisibilityToggle() {
+        const toggle = document.getElementById('visibilityToggle');
+        if (!toggle) return;
+
+        const label = document.getElementById('visibilityLabel');
+        const shareBox = document.getElementById('shareLinkBox');
+
+        toggle.addEventListener('change', async () => {
+            const slug = toggle.dataset.slug;
+            const isPublic = toggle.checked;
+            toggle.disabled = true;
+
+            try {
+                const body = new URLSearchParams({ is_public: isPublic });
+                const res = await fetch(`/api/portfolio/${slug}/visibility`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body,
+                });
+                if (!res.ok) throw new Error();
+
+                if (label) {
+                    label.textContent = isPublic
+                        ? 'Public — visible avec le lien du portfolio'
+                        : 'Privé — visible uniquement via un lien de partage';
+                }
+                if (shareBox) shareBox.hidden = isPublic;
+            } catch (_) {
+                toggle.checked = !isPublic; // revert on failure
+                alert('Impossible de changer la visibilité. Réessayez.');
+            } finally {
+                toggle.disabled = false;
+            }
+        });
+    }
+
+    /* ──────────────────────────────────────────────────────────
+         LIEN DE PARTAGE — copier / régénérer (propriétaire uniquement)
+      ────────────────────────────────────────────────────────── */
+    function initShareLink() {
+        const copyBtn = document.getElementById('copyShareLinkBtn');
+        const regenBtn = document.getElementById('regenerateTokenBtn');
+        const input = document.getElementById('shareLinkInput');
+
+        if (copyBtn && input) {
+            copyBtn.addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(input.value);
+                } catch (_) {
+                    input.select();
+                    document.execCommand('copy');
+                }
+                const original = copyBtn.textContent;
+                copyBtn.textContent = 'Copié !';
+                setTimeout(() => { copyBtn.textContent = original; }, 1500);
+            });
+        }
+
+        if (regenBtn && input) {
+            regenBtn.addEventListener('click', async () => {
+                if (!confirm('Régénérer le lien de partage ? Tous les liens déjà distribués cesseront de fonctionner.')) {
+                    return;
+                }
+
+                const slug = regenBtn.dataset.slug;
+                regenBtn.disabled = true;
+                try {
+                    const res = await fetch(`/api/portfolio/${slug}/share-token`, { method: 'POST' });
+                    if (!res.ok) throw new Error();
+                    const data = await res.json();
+                    input.value = data.share_url;
+                } catch (_) {
+                    alert('Impossible de régénérer le lien. Réessayez.');
+                } finally {
+                    regenBtn.disabled = false;
+                }
+            });
+        }
+    }
+
+    /* ──────────────────────────────────────────────────────────
           INITIALISATION
           Lance toutes les fonctions après le chargement du DOM.
        ────────────────────────────────────────────────────────── */
@@ -133,6 +216,8 @@
         initProjectsStagger();
         initProjectLinks();
         initDeletePortfolio();
+        initVisibilityToggle();
+        initShareLink();
     });
 
 })();

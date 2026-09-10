@@ -14,23 +14,47 @@
 
 <body>
     <nav class="site-nav">
-        <a href="#" class="nav-brand">e<span>P</span>ortfolio</a>
-        <div class="nav-right">
-            <ul class="nav-links">
-                <li><a href="/dashboard">← Retour</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            {% if is_owner %}
-            <button type="button" class="btn-delete-portfolio" id="deletePortfolioBtn" data-slug="{{ slug }}">
-                Supprimer
-            </button>
-            {% endif %}
+        <div class="nav-top-row">
+            <a href="#" class="nav-brand">e<span>P</span>ortfolio</a>
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="/dashboard">← Retour</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                {% if is_owner %}
+                <button type="button" class="btn-delete-portfolio" id="deletePortfolioBtn" data-slug="{{ slug }}">
+                    Supprimer
+                </button>
+                {% endif %}
+            </div>
         </div>
+
+        {% if is_owner %}
+        <div class="owner-bar">
+            <div class="visibility-toggle">
+                <label class="switch">
+                    <input type="checkbox" id="visibilityToggle" data-slug="{{ slug }}" {% if is_public
+                        %}checked{% endif %}>
+                    <span class="switch-track"></span>
+                </label>
+                <span class="visibility-label" id="visibilityLabel">
+                    {{ "Public — visible avec le lien du portfolio" if is_public else "Privé — visible uniquement via un lien de partage" }}
+                </span>
+            </div>
+            <div class="share-link-box" id="shareLinkBox" {% if is_public %}hidden{% endif %}>
+                <input type="text" id="shareLinkInput" readonly value="{{ share_url }}">
+                <button type="button" id="copyShareLinkBtn" class="btn-share-action">Copier</button>
+                <button type="button" id="regenerateTokenBtn" class="btn-share-action" data-slug="{{ slug }}">
+                    Régénérer
+                </button>
+            </div>
+        </div>
+        {% endif %}
     </nav>
 
-    <main style="padding-top: 64px">
+    <main class="{{ 'has-owner-bar' if is_owner else '' }}">
 
         <div id="hero">
             <div class="hero-left">

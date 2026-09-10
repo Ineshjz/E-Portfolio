@@ -358,6 +358,25 @@ main {
     flex-shrink: 0;
 }
 
+/* ─── VISIBILITY BADGE ───────────────── */
+.visibility-badge {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.visibility-badge.private {
+    background: #f1e4e4;
+    color: #a33;
+}
+
 .skill-chip {
     background: var(--accent-soft);
     color: #7a5c1e;
