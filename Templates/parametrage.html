@@ -715,7 +715,7 @@
             <input type="url" name="proj_url_${id}" placeholder="https://github.com/…" />
           </div>
           <div class="field full">
-            <label>Visuals (image/video URL)</label>
+            <label>Visual (image URL)</label>
             <input type="url" name="proj_image_${id}" placeholder="https://…" />
           </div>
         </div>
@@ -800,7 +800,7 @@
           collaborators: qn('collaborators'), url: qn('url'),
         });
         project_visual.push({
-          image: qn('image'), video: '', url: qn('url'), comments: '',
+          image_url: qn('image'), project_url: qn('url'), comments: '',
         });
       });
 

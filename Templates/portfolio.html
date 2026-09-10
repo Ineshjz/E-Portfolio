@@ -136,6 +136,9 @@
                 <div class="proj-item" {% if proj.url %}data-url="{{ proj.url }}" {% endif %}>
                     <div class="proj-num">{{ "%02d" | format(loop.index) }}</div>
                     <div class="proj-body">
+                        {% if project_visuals.get(proj.id) %}
+                        <img class="proj-visual" src="{{ project_visuals.get(proj.id) }}" alt="{{ proj.scope or 'Project' }} visual" loading="lazy">
+                        {% endif %}
                         <div class="proj-name">{{ proj.scope or "Untitled" }}</div>
                         {% if proj.why %}<div class="proj-desc">{{ proj.why }}</div>{% endif %}
                         <div class="proj-tags">

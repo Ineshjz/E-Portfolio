@@ -123,7 +123,6 @@ class ProjectVisual(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     project_id: int = Field(foreign_key="project.id")
     image_url: str = ""
-    video_url: str = ""
     project_url: str = ""
     comments: str | None = None
 
@@ -161,7 +160,6 @@ class ProjectInput(SQLModel):
 
 class ProjectVisualInput(SQLModel):
     image_url: str = ""
-    video_url: str = ""
     project_url: str = ""
     comments: str | None = None
 
@@ -313,9 +311,20 @@ def create_portfolio(
     )
     session.add(profile)
 
-    for project_data in eportfolio.project_description:
+    # The generator sends project_description and project_visual as parallel
+    # lists, one Visual per Project in the same order — zip pairs them back up.
+    for project_data, visual_data in zip(
+        eportfolio.project_description, eportfolio.project_visual
+    ):
         project = Project(**project_data.model_dump(), portfolio_id=portfolio.id)
         session.add(project)
+        session.flush()  # populate project.id for the Visual's foreign key
+
+        if visual_data.image_url:
+            visual = ProjectVisual(
+                **visual_data.model_dump(), project_id=project.id
+            )
+            session.add(visual)
 
     session.commit()
     return {"message": "Portfolio créé avec succès", "slug": slug}
@@ -348,6 +357,13 @@ def show_portfolio(
         select(Project).where(Project.portfolio_id == portfolio.id)
     ).all()
 
+    visuals = session.exec(
+        select(ProjectVisual).where(
+            ProjectVisual.project_id.in_([p.id for p in projects])
+        )
+    ).all()
+    project_visuals = {v.project_id: v.image_url for v in visuals if v.image_url}
+
     skills = [s.strip() for s in profile.main_skills.split(",") if s.strip()]
     keywords = [k.strip() for k in profile.keywords.split(",") if k.strip()]
 
@@ -359,6 +375,7 @@ def show_portfolio(
         context={
             "personal": profile,
             "projects": projects,
+            "project_visuals": project_visuals,
             "skills": skills,
             "keywords": keywords,
             "slug": slug,
