@@ -232,6 +232,15 @@ body {
     justify-content: flex-end;
 }
 
+/* Le sélecteur de classe ci-dessus fixe `display`, ce qui écraserait sinon
+   silencieusement le `display:none` par défaut du navigateur pour [hidden]
+   (une règle d'auteur l'emporte toujours sur la feuille de style par défaut,
+   quelle que soit la spécificité) : sans ceci, le bloc resterait visible
+   même une fois cet attribut posé. */
+.share-link-box[hidden] {
+    display: none;
+}
+
 .share-link-box input {
     flex: 1;
     max-width: 380px;
